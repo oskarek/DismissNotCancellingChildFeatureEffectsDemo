@@ -8,14 +8,14 @@ struct FeatureX {
   struct State: Equatable {}
 
   enum Action {
-    case onAppear
+    case onViewDidLoad
     case switchButtonTapped
   }
 
   var body: some ReducerOf<Self> {
     Reduce { _, action in
       switch action {
-      case .onAppear:
+      case .onViewDidLoad:
         return .run { send in
           while true {
             try await Task.sleep(for: .seconds(1))
@@ -47,6 +47,8 @@ class FeatureXViewController: UIViewController {
     super.viewDidLoad()
     view.backgroundColor = .white
 
+    store.send(.onViewDidLoad)
+
     let label = UILabel()
     label.text = "X"
     label.font = UIFont.systemFont(ofSize: 48)
@@ -65,11 +67,6 @@ class FeatureXViewController: UIViewController {
       stack.centerXAnchor.constraint(equalTo: view.centerXAnchor),
       stack.centerYAnchor.constraint(equalTo: view.centerYAnchor)
     ])
-  }
-
-  override func viewWillAppear(_ animated: Bool) {
-    super.viewWillAppear(animated)
-    store.send(.onAppear)
   }
 
   @objc func switchButtonTapped() {

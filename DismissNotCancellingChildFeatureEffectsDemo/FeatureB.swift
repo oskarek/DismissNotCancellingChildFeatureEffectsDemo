@@ -88,11 +88,8 @@ class FeatureBViewController: UIViewController {
     }
   }
 
-  var viewHasAppeared = false
-  override func viewWillAppear(_ animated: Bool) {
-    super.viewWillAppear(animated)
-    guard !viewHasAppeared else { return }
-    viewHasAppeared = true
+  override func viewDidLoad() {
+    super.viewDidLoad()
 
     observe { [weak self] in
       guard let self else { return }
@@ -100,12 +97,16 @@ class FeatureBViewController: UIViewController {
       case .featureX:
         if let currentChild, currentChild is FeatureXViewController { return }
         if let store = store.scope(state: \.child.featureX, action: \.child.featureX) {
-          currentChild = FeatureXViewController(store: store)
+          DispatchQueue.main.async { [weak self] in
+            self?.currentChild = FeatureXViewController(store: store)
+          }
         }
       case .featureY:
         if let currentChild, currentChild is FeatureYViewController { return }
         if let store = store.scope(state: \.child.featureY, action: \.child.featureY) {
-          currentChild = FeatureYViewController(store: store)
+          DispatchQueue.main.async { [weak self] in
+            self?.currentChild = FeatureYViewController(store: store)
+          }
         }
       }
     }

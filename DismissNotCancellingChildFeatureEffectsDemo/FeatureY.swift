@@ -9,7 +9,7 @@ struct FeatureY {
 
   enum Action {
     case closeButtonTapped
-    case onAppear
+    case onViewDidLoad
   }
 
   var body: some ReducerOf<Self> {
@@ -17,7 +17,7 @@ struct FeatureY {
       switch action {
       case .closeButtonTapped:
         return .none
-      case .onAppear:
+      case .onViewDidLoad:
         return .run { send in
           while true {
             try await Task.sleep(for: .seconds(1))
@@ -48,6 +48,8 @@ class FeatureYViewController: UIViewController {
     super.viewDidLoad()
     view.backgroundColor = .white
 
+    store.send(.onViewDidLoad)
+
     let label = UILabel()
     label.text = "Y"
     label.font = UIFont.systemFont(ofSize: 48)
@@ -66,11 +68,6 @@ class FeatureYViewController: UIViewController {
       stack.centerXAnchor.constraint(equalTo: view.centerXAnchor),
       stack.centerYAnchor.constraint(equalTo: view.centerYAnchor)
     ])
-  }
-
-  override func viewWillAppear(_ animated: Bool) {
-    super.viewWillAppear(animated)
-    store.send(.onAppear)
   }
 
   @objc func closeButtonTapped() {

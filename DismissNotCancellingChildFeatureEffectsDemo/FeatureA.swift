@@ -54,13 +54,6 @@ class FeatureAViewController: UIViewController {
     button.frame = CGRect(x: 0, y: 0, width: 200, height: 50)
     button.center = view.center
     view.addSubview(button)
-  }
-
-  var viewHasAppeared = false
-  override func viewWillAppear(_ animated: Bool) {
-    super.viewWillAppear(animated)
-    guard !viewHasAppeared else { return }
-    viewHasAppeared = true
 
     var featureBVC: FeatureBViewController?
     observe { [weak self] in
@@ -72,7 +65,9 @@ class FeatureAViewController: UIViewController {
       {
         featureBVC = FeatureBViewController(store: featureBStore)
         featureBVC?.modalPresentationStyle = .automatic
-        present(featureBVC!, animated: true, completion: nil)
+        DispatchQueue.main.async { [weak self] in
+          self?.present(featureBVC!, animated: true, completion: nil)
+        }
       } else if store.destination?.featureB == nil, featureBVC != nil {
         dismiss(animated: true)
         featureBVC = nil
